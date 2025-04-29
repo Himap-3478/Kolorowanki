@@ -5,6 +5,31 @@ from io import BytesIO
 from openai import OpenAI
 from dotenv import dotenv_values
 
+def is_valid_api_key(api_key):
+    try:
+        client = OpenAI(api_key=api_key)
+        client.models.list()  # Próba dostępu do modeli
+        return True
+    except Exception:
+        return False
+
+# Inicjalizacja stanu sesji
+if "authenticated" not in st.session_state:
+    st.session_state.authenticated = False
+
+if not st.session_state.authenticated:
+    st.title(":rainbow: Matejko")
+    api_key_input = st.text_input("Wprowadź swój klucz OpenAI:", type="password")
+    if st.button("Zaloguj"):
+        if is_valid_api_key(api_key_input):
+            st.session_state.authenticated = True
+            st.session_state.api_key = api_key_input
+            st.success("Zalogowano!")
+            st.rerun()
+        else:
+            st.error("Nieprawidłowy klucz API. Spróbuj ponownie.")
+    st.stop()
+
 env = dotenv_values(".env")
 openai_client = OpenAI(api_key=env["OPENAI_API_KEY"])
 
