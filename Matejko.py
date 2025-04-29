@@ -30,10 +30,11 @@ if not st.session_state.authenticated:
             st.error("Nieprawidłowy klucz API. Spróbuj ponownie.")
     st.stop()
 
-env = dotenv_values(".env")
-openai_client = OpenAI(api_key=env["OPENAI_API_KEY"])
+
+openai_client = OpenAI(api_key=st.session_state.api_key)
 
 st.title(':rainbow: Matejko')
+
 
 if "ideas" not in st.session_state:
     st.session_state.ideas = None
